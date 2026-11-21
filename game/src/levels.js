@@ -40,6 +40,13 @@ export const CARS = [
       low(250, 300, 70, 26, 'sacks'), low(520, 120, 70, 26, 'sacks'),
       low(520, 500, 70, 26, 'sacks'), low(730, 470, 70, 26, 'sacks'),
     ],
+    props: [
+      { kind: 'sackpile', x: 56, y: 512, w: 84, h: 52 },
+      { kind: 'sackpile', x: 770, y: 190, w: 76, h: 48 },
+      { kind: 'cratesmall', x: 60, y: 190, w: 58, h: 44 },
+      { kind: 'cratesmall', x: 268, y: 452, w: 52, h: 40 },
+      { kind: 'trolley', x: 486, y: 282, w: 66, h: 42 },
+    ],
     loot: [
       loot(190, 120, 'Brass Compass', 120),
       loot(415, 215, 'Silver Flask', 150),
@@ -68,6 +75,12 @@ export const CARS = [
     coverLow: [
       low(215, 300, 80, 22, 'curtain'), low(405, 300, 80, 22, 'curtain'),
       low(595, 300, 80, 22, 'curtain'), low(760, 300, 60, 22, 'curtain'),
+    ],
+    props: [
+      { kind: 'readlamp', x: 262, y: 82 }, { kind: 'readlamp', x: 452, y: 534 },
+      { kind: 'readlamp', x: 642, y: 82 }, { kind: 'readlamp', x: 262, y: 534 },
+      { kind: 'slippers', x: 196, y: 140 }, { kind: 'slippers', x: 576, y: 472 },
+      { kind: 'slippers', x: 386, y: 140 },
     ],
     loot: [
       loot(205, 97, 'Gold Locket', 160),
@@ -100,6 +113,11 @@ export const CARS = [
       low(230, 300, 90, 22, 'bench'), low(440, 300, 90, 22, 'bench'),
       low(650, 300, 90, 22, 'bench'), low(120, 520, 90, 22, 'bench'),
     ],
+    props: [
+      { kind: 'cart', x: 306, y: 246, w: 60, h: 36 },
+      { kind: 'cart', x: 556, y: 372, w: 60, h: 36 },
+      { kind: 'stool', x: 806, y: 200 }, { kind: 'stool', x: 806, y: 420 },
+    ],
     loot: [
       loot(230, 158, 'Silver Salver', 180),
       loot(440, 462, 'Crystal Decanter', 240),
@@ -130,6 +148,13 @@ export const CARS = [
     coverLow: [
       low(240, 300, 90, 22, 'sofa'), low(470, 300, 90, 22, 'sofa'),
       low(680, 300, 90, 22, 'sofa'), low(120, 300, 70, 22, 'plant'),
+    ],
+    props: [
+      { kind: 'stool', x: 726, y: 142 }, { kind: 'stool', x: 776, y: 142 },
+      { kind: 'stool', x: 826, y: 142 },
+      { kind: 'sidetable', x: 246, y: 408, w: 46, h: 46 },
+      { kind: 'sidetable', x: 612, y: 236, w: 46, h: 46 },
+      { kind: 'rug', x: 120, y: 362, w: 170, h: 108 },
     ],
     loot: [
       loot(770, 92, 'Aged Single Malt', 320),
@@ -162,6 +187,14 @@ export const CARS = [
     coverLow: [
       low(230, 300, 80, 22, 'sacks'), low(570, 300, 80, 22, 'sacks'),
       low(440, 130, 80, 22, 'sacks'), low(440, 490, 80, 22, 'sacks'),
+    ],
+    props: [
+      { kind: 'case', x: 246, y: 176, w: 56, h: 42 },
+      { kind: 'case', x: 578, y: 176, w: 56, h: 42 },
+      { kind: 'case', x: 246, y: 402, w: 56, h: 42 },
+      { kind: 'case', x: 578, y: 402, w: 56, h: 42 },
+      { kind: 'tripwire', x1: 388, y1: 196, x2: 492, y2: 196 },
+      { kind: 'tripwire', x1: 388, y1: 424, x2: 492, y2: 424 },
     ],
     loot: [
       loot(345, 110, 'Gold Ingot', 400),
