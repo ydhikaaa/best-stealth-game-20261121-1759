@@ -1098,6 +1098,12 @@ function drawBubble(ctx, g) {
   ctx.beginPath();
   ctx.roundRect(x - w / 2, y - 12, w, 20, 6);
   ctx.fill();
+  ctx.strokeStyle = g.state === 'SPOTTED' ? '#ff5347' : g.state === 'SUSPICIOUS' ? '#ffa53d' : 'rgba(34,37,44,0.35)';
+  ctx.lineWidth = g.state === 'PATROL' ? 1 : 2;
+  ctx.beginPath();
+  ctx.roundRect(x - w / 2, y - 12, w, 20, 6);
+  ctx.stroke();
+  ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(x - 4, y + 8); ctx.lineTo(x + 4, y + 8); ctx.lineTo(x, y + 15);
   ctx.closePath(); ctx.fill();
@@ -1223,6 +1229,32 @@ function drawLeftPanel(ctx, game) {
     ctx.fillText(b, 18, ly + 12);
     ly += 28;
   }
+
+  drawFieldNotes(ctx, game);
+}
+
+// The thief's notebook for this car: what is aboard, what to mind, and
+// what the floor will do to your footsteps. Written from live car data.
+function drawFieldNotes(ctx, game) {
+  const { level } = game;
+  panel(ctx, 8, 566, 180, 188, 'FIELD NOTES');
+  ctx.font = 'italic 12px Georgia, serif';
+  ctx.fillStyle = '#cfd6df';
+  let y = 596;
+  const note = (text) => { ctx.fillText(text, 18, y); y += 21; };
+  const topLoot = level.loot.reduce((a, b) => (b.value > (a ? a.value : -1) ? b : a), null);
+  if (topLoot) note(`Prize: ${topLoot.name} ($${topLoot.value})`);
+  note(`Prizes left aboard: ${game.lootLeft} of ${game.lootTotal}`);
+  note(`Wardens on this car: ${game.guards.length}`);
+  const lit = level.lamps.filter((l) => l.on).length;
+  note(`Lamps lit: ${lit} of ${level.lamps.length} — douse [R]`);
+  if (level.gravel && level.gravel.length) {
+    note(`Gravel: ${level.gravel.length} patch${level.gravel.length > 1 ? 'es' : ''} — loud`);
+    note('unless you sneak across.');
+  } else {
+    note('Carpet throughout — soft steps.');
+  }
+  note(game.spottedThisCar ? 'They know a thief is aboard.' : 'No one suspects a thing… yet.');
 }
 
 function drawRightPanel(ctx, game) {
@@ -1251,6 +1283,43 @@ function drawRightPanel(ctx, game) {
   ctx.fillText(game.player.lit ? 'You are LIT' : 'You are in shadow', 1104, y); y += 18;
   ctx.fillStyle = game.player.hidden ? '#7be495' : '#aebdd0';
   ctx.fillText(game.player.hidden ? 'HIDDEN at cover' : game.player.sprinting ? 'Making NOISE' : 'Quiet', 1104, y);
+
+  drawDetection(ctx, game);
+}
+
+// The sharpest eyes on you right now: the most suspicious warden, how
+// close the nearest one walks, and what to do about it.
+function drawDetection(ctx, game) {
+  const p = game.player;
+  panel(ctx, 1092, 360, 180, 132, 'DETECTION');
+  let top = null, nearest = null, nd = Infinity;
+  for (const g of game.guards) {
+    if (!top || g.suspicion > top.suspicion) top = g;
+    const d = Math.hypot(g.x - p.x, g.y - p.y);
+    if (d < nd) { nd = d; nearest = g; }
+  }
+  let y = 390;
+  ctx.font = '12.5px sans-serif';
+  if (top && top.suspicion > 0.02) {
+    ctx.fillStyle = top.suspicion > 0.7 ? '#ff7a5c' : top.suspicion > 0.35 ? '#ffa53d' : '#ffd66e';
+    ctx.fillText(`${top.name} — ${top.state}`, 1104, y); y += 8;
+    ctx.fillStyle = 'rgba(255,255,255,0.14)';
+    ctx.fillRect(1104, y, 150, 7);
+    ctx.fillStyle = top.suspicion > 0.7 ? '#ff5347' : top.suspicion > 0.35 ? '#ffa53d' : '#ffd66e';
+    ctx.fillRect(1104, y, 150 * top.suspicion, 7);
+    y += 24;
+  } else {
+    ctx.fillStyle = '#7be495';
+    ctx.fillText('No eyes on you', 1104, y);
+    y += 24;
+  }
+  ctx.fillStyle = '#aebdd0';
+  ctx.font = '12.5px sans-serif';
+  if (nearest) ctx.fillText(`Nearest warden: ${Math.round(nd / 10)} paces`, 1104, y);
+  y += 19;
+  ctx.fillStyle = top && top.suspicion > 0.7 ? '#ff7a5c' : '#9fb0c3';
+  ctx.font = 'italic 12px Georgia, serif';
+  ctx.fillText(top && top.suspicion > 0.7 ? 'Break line of sight — now!' : top && top.suspicion > 0.35 ? 'Freeze, or slip to shadow.' : 'The car is calm.', 1104, y);
 }
 
 export function formatTime(s) {

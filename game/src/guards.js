@@ -78,6 +78,7 @@ export class Guard {
     this.bubble = null;
     this.bubbleT = 0;
     this.saidHm = false;
+    this.saidThere = false;
     this.alerted = false; // has fully suspected once: next full meter = SPOTTED
     this.stepT = 0;
   }
@@ -131,10 +132,14 @@ export class Guard {
         this.saidHm = true;
         this.say('Hm?', 1.1);
       }
+      if (this.suspicion > 0.7 && !this.saidThere) {
+        this.saidThere = true;
+        this.say('There!', 0.9);
+      }
       if (dist < 30) this.suspicion = 1; // bumped into the warden's lantern light
     } else {
       this.suspicion -= dt * (this.mode === 'look' ? 0.10 : 0.22);
-      if (this.suspicion < 0.3) this.saidHm = false;
+      if (this.suspicion < 0.3) { this.saidHm = false; this.saidThere = false; }
     }
     this.suspicion = Math.max(0, Math.min(1, this.suspicion));
 
@@ -180,11 +185,13 @@ export class Guard {
         this.mode = 'look';
         this.timer = 2.1;
         this.lookBase = this.angle;
+        if (!this.lastSeen && !this.bubble) this.say('Nothing here.', 1.1);
       }
     } else if (this.mode === 'look') {
       this.timer -= dt;
       this.angle = this.lookBase + Math.sin((2.1 - this.timer) * 2.6) * 0.85;
       if (this.timer <= 0) {
+        if (this.alerted) this.say("Must've been the wind…", 1.8);
         this.mode = 'return';
         this.state = 'PATROL';
         this.alerted = false;
